@@ -1,7 +1,12 @@
-FROM node:26
+# alpine: меньше пакетов — меньше уязвимостей
+FROM node:26-alpine
+# критическая уязвимость базового образа (Scout) — обновить пакеты alpine, Р333
+RUN apk upgrade --no-cache
 WORKDIR /app
 COPY package*.json ./
 RUN npm ci --omit=dev
 COPY . .
 EXPOSE 3000
+# дальше всё — от пользователя node
+USER node
 CMD ["node", "server.js"]
